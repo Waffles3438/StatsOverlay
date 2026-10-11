@@ -1,72 +1,68 @@
 package me.redth.statsoverlay.config
 
-import cc.polyfrost.oneconfig.config.Config
-import cc.polyfrost.oneconfig.config.annotations.*
-import cc.polyfrost.oneconfig.config.core.OneKeyBind
-import cc.polyfrost.oneconfig.config.data.InfoType
-import cc.polyfrost.oneconfig.config.data.Mod
-import cc.polyfrost.oneconfig.config.data.ModType
+import org.polyfrost.oneconfig.api.config.v1.Config
+import org.polyfrost.oneconfig.api.config.v1.annotations.*
+import org.polyfrost.oneconfig.api.ui.v1.keybind.KeybindHelper
 import me.redth.statsoverlay.StatsOverlay
 import me.redth.statsoverlay.data.Column
 import me.redth.statsoverlay.util.HypixelAPI
-import org.lwjgl.input.Keyboard
+import org.lwjgl.sdl.SDLScancode
 
-object ModConfig : Config(Mod(StatsOverlay.NAME, ModType.HYPIXEL), "${StatsOverlay.MODID}.json") {
-    @Info(text = "Don't forget to set your API key", type = InfoType.INFO)
+object ModConfig : Config(StatsOverlay.MODID, StatsOverlay.NAME, Category.HYPIXEL) {
+    @Info(title = "Set your Hypixel API key in the API tab")
     var ignored = false
 
-    @KeyBind(name = "Overlay Keybind")
-    var keyBind = OneKeyBind(Keyboard.KEY_TAB)
+    @Keybind(title = "Overlay Keybind")
+    var keyBind = KeybindHelper.builder().key(SDLScancode.SDL_SCANCODE_TAB)
+        .action { pressed: Boolean -> me.redth.statsoverlay.EventListener.onOverlayKey(pressed); true }
+        .register()
 
-    @DualOption(name = "Keybind Type", left = "Hold", right = "Toggle")
+    @Switch(title = "Toggle keybind", description = "Off: hold the key. On: press to toggle.")
     var toggleKeyBind = false
 
-    @DualOption(name = "Show in", left = "Only in Bedwars", right = "Any Server")
+    @Switch(title = "Show on any server", description = "Off: only show during Bedwars.")
     var showAnywhere = false
 
-    @Dropdown(name = "Sort by", options = ["Stars", "Wins", "WLR", "Final Kills", "FKDR", "Kills", "KDR", "Beds Broken", "BBLR", "Winstreak"])
+    @Dropdown(title = "Sort by", options = ["Stars", "Wins", "WLR", "Final Kills", "FKDR", "Kills", "KDR", "Beds Broken", "BBLR", "Winstreak"])
     var sorting = 0
 
-    @Checkbox(name = "Sort by teams after game started")
+    @Checkbox(title = "Sort by teams after game started")
     var sortByTeams = true
 
-    @Checkbox(name = "Wins", subcategory = "Bedwars")
+    @Checkbox(title = "Wins", subcategory = "Bedwars")
     var bwWins = true
 
-    @Checkbox(name = "WLR", subcategory = "Bedwars")
+    @Checkbox(title = "WLR", subcategory = "Bedwars")
     var bwWlr = true
 
-    @Checkbox(name = "Final Kills", subcategory = "Bedwars")
+    @Checkbox(title = "Final Kills", subcategory = "Bedwars")
     var bwFinalKills = true
 
-    @Checkbox(name = "FKDR", subcategory = "Bedwars")
+    @Checkbox(title = "FKDR", subcategory = "Bedwars")
     var bwFkdr = true
 
-    @Checkbox(name = "Kills", subcategory = "Bedwars")
+    @Checkbox(title = "Kills", subcategory = "Bedwars")
     var bwKills = true
 
-    @Checkbox(name = "KDR", subcategory = "Bedwars")
+    @Checkbox(title = "KDR", subcategory = "Bedwars")
     var bwKdr = true
 
-    @Checkbox(name = "Beds Broken", subcategory = "Bedwars")
+    @Checkbox(title = "Beds Broken", subcategory = "Bedwars")
     var bwBedsBroken = true
 
-    @Checkbox(name = "BBLR", subcategory = "Bedwars")
+    @Checkbox(title = "BBLR", subcategory = "Bedwars")
     var bwBblr = true
 
-    @Checkbox(name = "Winstreak", subcategory = "Bedwars")
+    @Checkbox(title = "Winstreak", subcategory = "Bedwars")
     var bwWinstreak = true
 
-    @HUD(name = "Overlay", subcategory = "HUD")
-    var hud = OverlayHUD()
-
-    @DualOption(name = "API", category = "API", left = "Ursa Minor", right = "Hypixel API", size = 2)
+    @Switch(title = "Use Hypixel API", category = "API", description = "Off: use Ursa Minor. On: use your Hypixel API key.")
     var useHypixelAPI = true
 
-    @Text(name = "API Key", category = "API", secure = true)
+    @Text(title = "API Key", category = "API")
     var hypixelApiKey = ""
 
-    @Button(name = "Clear cache", category = "Debug", text = "Clear")
+    @Button(title = "Clear cache", category = "Debug", text = "Clear")
     fun clearCache() {
         HypixelAPI.clearCache()
     }
@@ -98,7 +94,4 @@ object ModConfig : Config(Mod(StatsOverlay.NAME, ModType.HYPIXEL), "${StatsOverl
         else -> Column.STAR
     }
 
-    init {
-        initialize()
-    }
 }

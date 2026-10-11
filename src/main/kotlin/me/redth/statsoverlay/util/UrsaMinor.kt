@@ -1,6 +1,5 @@
 package me.redth.statsoverlay.util
 
-import cc.polyfrost.oneconfig.utils.dsl.mc
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
@@ -38,7 +37,7 @@ object UrsaMinor {
     private fun authorizeNewServer(): Requesting {
         val newServerId = UUID.randomUUID().toString()
         val profile = mc.session.profile
-        val token = mc.session.token
+        val token = mc.session.accessToken
 
         mc.sessionService.joinServer(profile, token, newServerId)
 

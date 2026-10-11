@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "statsoverlay",
+  "version": "${version}",
+  "name": "StatsOverlay",
+  "description": "Configurable Hypixel Bedwars stats overlay.",
+  "authors": ["Redth"],
+  "environment": "client",
+  "entrypoints": {
+    "client": [{
+      "adapter": "kotlin",
+      "value": "me.redth.statsoverlay.StatsOverlay"
+    }]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "1.8.9",
+    "java": ">=25",
+    "fabric-language-kotlin": ">=1.14.1+kotlin.2.4.20",
+    "oneconfig": ">=${oneconfig_version}",
+    "oneconfigv1": ">=${oneconfig_version}"
+  }
+}

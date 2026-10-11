@@ -1,11 +1,11 @@
 package me.redth.statsoverlay.data
 
-import cc.polyfrost.oneconfig.utils.dsl.mc
+import me.redth.statsoverlay.util.mc
 import me.redth.statsoverlay.bedwars.BedwarsPrestige
 import me.redth.statsoverlay.config.ModConfig
 import me.redth.statsoverlay.util.PlayerObject
-import net.minecraft.scoreboard.ScorePlayerTeam
-import net.minecraft.util.MathHelper
+import net.minecraft.scoreboard.team.Team
+import net.minecraft.util.math.MathHelper
 import java.util.concurrent.Future
 
 sealed interface Row {
@@ -13,12 +13,12 @@ sealed interface Row {
     fun getText(column: Column): ColoredText
 
     fun getTeamNameForSorting(): String =
-        mc.theWorld?.scoreboard?.getPlayersTeam(name)?.registeredName?.takeIf { it.isColorName() } ?: ""
+        mc.world?.scoreboard?.getTeamOfMember(name)?.name?.takeIf { it.isColorName() } ?: ""
 
     fun getFormattedName(): ColoredText {
-        val world = mc.theWorld ?: return ColoredText(name, alignment = Alignment.LEFT)
-        val team = world.scoreboard.getPlayersTeam(name)
-        return ColoredText(ScorePlayerTeam.formatPlayerName(team, name), alignment = Alignment.LEFT)
+        val world = mc.world ?: return ColoredText(name, alignment = Alignment.LEFT)
+        val team = world.scoreboard.getTeamOfMember(name)
+        return ColoredText(Team.getMemberDisplayName(team, name), alignment = Alignment.LEFT)
     }
 }
 
@@ -103,7 +103,7 @@ private fun format(value: Int, godLevel: Int): ColoredText {
     val degree = (godLevel - value).coerceAtLeast(0) / godLevel.toFloat() * 0.5f
     return ColoredText(
         "%,d".format(value),
-        MathHelper.hsvToRGB(degree, 0.7f, 1f),
+        MathHelper.toRgb(degree, 0.7f, 1f),
         Alignment.RIGHT
     )
 }
@@ -112,7 +112,7 @@ private fun format(value: Float, godLevel: Float): ColoredText {
     val degree = (godLevel - value).coerceAtLeast(0f) / godLevel * 0.5f
     return ColoredText(
         "%.2f".format(value),
-        MathHelper.hsvToRGB(degree, 0.7f, 1f),
+        MathHelper.toRgb(degree, 0.7f, 1f),
         Alignment.RIGHT
     )
 }
@@ -129,4 +129,3 @@ object RowComparator : Comparator<Row> {
         else -> o1.order() - o2.order()
     }
 }
-

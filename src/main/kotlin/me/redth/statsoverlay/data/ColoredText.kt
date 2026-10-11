@@ -1,13 +1,13 @@
 package me.redth.statsoverlay.data
 
-import cc.polyfrost.oneconfig.utils.dsl.mc
+import me.redth.statsoverlay.util.mc
 
 data class ColoredText(
     val text: String,
     val color: Int = 0xFFFFFFFF.toInt(),
     val alignment: Alignment = Alignment.CENTER,
 ) {
-    val width = mc.fontRendererObj.getStringWidth(text)
+    val width get() = mc.textRenderer.getWidth(text)
 
     companion object {
         val UNKNOWN = ColoredText("?", 0xFFAAAAAA.toInt())

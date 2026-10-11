@@ -1,26 +1,20 @@
 package me.redth.statsoverlay
 
-import cc.polyfrost.oneconfig.events.EventManager
 import me.redth.statsoverlay.config.ModConfig
-import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.fml.common.Mod
-import net.minecraftforge.fml.common.event.FMLInitializationEvent
+import me.redth.statsoverlay.config.OverlayHUD
+import net.fabricmc.api.ClientModInitializer
+import org.polyfrost.oneconfig.api.event.v1.EventManager
+import org.polyfrost.oneconfig.api.hud.v1.HudManager
+import org.polyfrost.oneconfig.api.hypixel.v1.HypixelUtils
 
-@Mod(
-    modid = StatsOverlay.MODID,
-    name = StatsOverlay.NAME,
-    version = StatsOverlay.VERSION,
-    modLanguageAdapter = "cc.polyfrost.oneconfig.utils.KotlinLanguageAdapter"
-)
-object StatsOverlay {
-    const val MODID = "@ID@"
-    const val NAME = "@NAME@"
-    const val VERSION = "@VER@"
+object StatsOverlay : ClientModInitializer {
+    const val MODID = "statsoverlay"
+    const val NAME = "StatsOverlay"
 
-    @Mod.EventHandler
-    fun onInit(e: FMLInitializationEvent) {
-        ModConfig
+    override fun onInitializeClient() {
+        ModConfig.preload()
+        HypixelUtils.getLocation()
         EventManager.INSTANCE.register(EventListener)
-        MinecraftForge.EVENT_BUS.register(EventListener)
+        HudManager.register(OverlayHUD(), MODID)
     }
 }

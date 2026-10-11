@@ -1,7 +1,7 @@
 package me.redth.statsoverlay.util
 
-import cc.polyfrost.oneconfig.libs.caffeine.cache.Caffeine
-import cc.polyfrost.oneconfig.libs.caffeine.cache.LoadingCache
+import com.github.benmanes.caffeine.cache.Caffeine
+import com.github.benmanes.caffeine.cache.LoadingCache
 import com.google.gson.Gson
 import me.redth.statsoverlay.config.ModConfig
 import java.net.HttpURLConnection
