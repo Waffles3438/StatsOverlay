@@ -3,6 +3,10 @@ package me.redth.statsoverlay.data
 import com.mojang.authlib.GameProfile
 import me.redth.statsoverlay.config.ModConfig
 import me.redth.statsoverlay.util.HypixelAPI
+import me.redth.statsoverlay.util.Achievements
+import me.redth.statsoverlay.util.Bedwars
+import me.redth.statsoverlay.util.PlayerObject
+import me.redth.statsoverlay.util.Stats
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
@@ -39,12 +43,13 @@ object FetchQueue {
         }
     }
 
-    fun makeGrid(): CompiledGrid {
+    fun makeGrid(preview: Boolean = false): CompiledGrid {
         val shown = Column.entries.filter { ModConfig.shouldShow(it) }
         val widthArray = IntArray(shown.size)
         val result = buildList {
             add(shown.map { column -> ColoredText(column.label) })
-            map.values
+            val rows = map.values.toList().ifEmpty { if (preview) previewRows else emptyList() }
+            rows
                 .sortedWith(getComparator())
                 .mapTo(this) { row ->
                     shown.map { column -> row.getText(column) }
@@ -60,6 +65,17 @@ object FetchQueue {
             widthArray.toList(),
             widthArray.sum(),
             result.size * 10
+        )
+    }
+
+    // Local examples let the editor show the HUD without a server, key press or API request.
+    private val previewRows by lazy {
+        listOf(
+            Loaded("Steve", PlayerObject(Achievements(250), Stats(Bedwars(
+                finalKills = 12500, finalDeaths = 2500, kills = 18000, deaths = 12000,
+                wins = 2500, losses = 1000, bedsBroken = 4000, bedsLost = 1600, winstreak = 12,
+            )))),
+            Nicked("Alex"),
         )
     }
 }

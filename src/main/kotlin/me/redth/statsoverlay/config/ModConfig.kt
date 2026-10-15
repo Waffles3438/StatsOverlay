@@ -3,6 +3,8 @@ package me.redth.statsoverlay.config
 import org.polyfrost.oneconfig.api.config.v1.Config
 import org.polyfrost.oneconfig.api.config.v1.annotations.*
 import org.polyfrost.oneconfig.api.ui.v1.keybind.KeybindHelper
+import org.polyfrost.compose.render.PolyColor
+import org.polyfrost.oneconfig.api.hud.v1.HudManager
 import me.redth.statsoverlay.StatsOverlay
 import me.redth.statsoverlay.data.Column
 import me.redth.statsoverlay.util.HypixelAPI
@@ -55,6 +57,41 @@ object ModConfig : Config(StatsOverlay.MODID, StatsOverlay.NAME, Category.HYPIXE
 
     @Checkbox(title = "Winstreak", subcategory = "Bedwars")
     var bwWinstreak = true
+
+    @Switch(title = "Enable overlay", category = "HUD")
+    var overlayEnabled = true
+
+    @Button(title = "Position and scale", category = "HUD", text = "Edit HUD")
+    fun editHud() {
+        HudManager.openEditor()
+    }
+
+    @Switch(title = "Background", category = "HUD", subcategory = "Background")
+    var overlayBackground = true
+
+    @Color(title = "Background color", category = "HUD", subcategory = "Background")
+    var overlayBackgroundColor = PolyColor(0x80000000.toInt())
+
+    @Switch(title = "Rounded corners", category = "HUD", subcategory = "Background")
+    var overlayRounded = true
+
+    @Slider(title = "Corner radius", category = "HUD", subcategory = "Background", min = 0f, max = 32f, step = 1f)
+    var overlayCornerRadius = 8
+
+    @Switch(title = "Border", category = "HUD", subcategory = "Background")
+    var overlayBorder = false
+
+    @Color(title = "Border color", category = "HUD", subcategory = "Background")
+    var overlayBorderColor = PolyColor.BLACK
+
+    @Slider(title = "Border thickness", category = "HUD", subcategory = "Background", min = 1f, max = 10f, step = 1f)
+    var overlayBorderThickness = 2
+
+    @Slider(title = "Horizontal padding", category = "HUD", subcategory = "Spacing", min = 0f, max = 50f, step = 1f)
+    var overlayPaddingX = 5
+
+    @Slider(title = "Vertical padding", category = "HUD", subcategory = "Spacing", min = 0f, max = 50f, step = 1f)
+    var overlayPaddingY = 5
 
     @Switch(title = "Use Hypixel API", category = "API", description = "Off: use Ursa Minor. On: use your Hypixel API key.")
     var useHypixelAPI = true

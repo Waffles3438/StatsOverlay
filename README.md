@@ -1,6 +1,6 @@
 # StatsOverlay
 
-A configurable Hypixel Bedwars stats overlay for **Ornithe 1.8.9**, using **OneConfig 1.4.0**.
+A configurable Hypixel Bedwars stats overlay for **Ornithe 1.8.9**, using **OneConfig 1.4.2**.
 
 ![Overlay](./images/overlay.png)
 ![Settings](./images/settings.png)
@@ -9,7 +9,7 @@ A configurable Hypixel Bedwars stats overlay for **Ornithe 1.8.9**, using **OneC
 
 Use an Ornithe **generation 2** Minecraft 1.8.9 installation with **Java 25 or newer** and Fabric Loader **0.19.5 or newer**. Install the following Ornithe-compatible mods and their required dependencies:
 
-- [OneConfig 1.4.0](https://modrinth.com/mod/oneconfig/version/ghWURw3V)
+- [OneConfig 1.4.2](https://modrinth.com/mod/oneconfig/version/zOz05Fjk)
 - [Compose Multiplatform 1.0.6](https://modrinth.com/mod/compose-multiplatform/version/aQmt5aNV)
 - [Fabric Language Kotlin 1.14.1+kotlin.2.4.20 or newer](https://modrinth.com/mod/fabric-language-kotlin)
 - [Ornithe Standard Libraries 0.21.1 or newer](https://modrinth.com/mod/osl)
@@ -17,7 +17,18 @@ Use an Ornithe **generation 2** Minecraft 1.8.9 installation with **Java 25 or n
 
 Put `StatsOverlay-1.8.9-ornithe-0.3.0.jar` in the instance's `mods` folder. This release uses Ornithe; remove the previous Forge StatsOverlay JAR from the instance.
 
-Open the OneConfig menu to configure StatsOverlay. Set your Hypixel API key in the API tab, or disable "Use Hypixel API" to use Ursa Minor. Hold **Tab** to show the overlay; enable "Toggle keybind" for toggle mode. Bedwars is the default location filter, and "Show on any server" removes it. Move and scale the overlay in OneConfig's HUD editor.
+Open the OneConfig menu to configure StatsOverlay. Set your Hypixel API key in the API tab, or disable "Use Hypixel API" to use Ursa Minor. Hold **Tab** to show the overlay; enable "Toggle keybind" for toggle mode. Bedwars is the default location filter, and "Show on any server" removes it.
+
+In **StatsOverlay → HUD**, customize the overlay with the same appearance controls as the Forge version:
+
+- Enable or disable the overlay.
+- Toggle the background and choose its color, opacity, and chroma.
+- Toggle rounded corners and adjust the corner radius.
+- Toggle the border and choose its color, opacity, chroma, and thickness.
+- Adjust horizontal and vertical padding.
+- Click **Edit HUD** to move and scale the overlay in OneConfig's HUD editor.
+
+The editor shows local sample players when the player list is empty, so you can customize the HUD without joining a server or holding the overlay key. Appearance settings are saved in your OneConfig profile. Column visibility, sorting, and hold/toggle keybind controls remain in the General tab.
 
 The OneConfig v1 HUD has separate saved settings. Reconfigure the overlay position and keybind when migrating from the old Forge/OneConfig 0.2 release.
 

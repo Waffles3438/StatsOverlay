@@ -34,17 +34,19 @@ dependencies {
 
     // API modules for compilation; the distributed bootstrap supplies them in-game.
     modCompileOnly("org.polyfrost.oneconfig:1.8.9-ornithe:$oneconfigVersion") { isTransitive = false }
-    listOf("config", "config-impl", "events", "hud", "ui", "utils").forEach {
+    listOf("config", "config-impl", "events", "hud", "poly-compose", "ui", "utils").forEach {
         compileOnly("org.polyfrost.oneconfig:$it:$oneconfigVersion") { isTransitive = false }
     }
     compileOnly("net.hypixel:hypixel-data:0.2.0")
     compileOnly("net.hypixel:mod-api:1.0.2")
-    developmentMods("maven.modrinth:oneconfig:ghWURw3V") { isTransitive = false }
+    developmentMods("maven.modrinth:oneconfig:zOz05Fjk") { isTransitive = false }
     developmentMods("maven.modrinth:compose-multiplatform:aQmt5aNV") { isTransitive = false }
     modImplementation("pl.tomgirl:pylon:0.1.7")
 
     implementation("com.github.ben-manes.caffeine:caffeine:2.9.3")
     include("com.github.ben-manes.caffeine:caffeine:2.9.3")
+
+    testImplementation("junit:junit:4.13.2")
 }
 
 // Load published distributions from mods so Fabric also discovers and remaps

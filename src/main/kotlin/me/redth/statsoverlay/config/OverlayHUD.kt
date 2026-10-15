@@ -8,8 +8,7 @@ import me.redth.statsoverlay.data.FetchQueue
 import me.redth.statsoverlay.util.mc
 import net.minecraft.client.gui.GuiElement
 import org.polyfrost.oneconfig.api.hud.v1.LegacyHud
-import kotlin.math.ceil
-import kotlin.math.sqrt
+import org.polyfrost.oneconfig.api.hud.v1.HudManager
 
 private const val ROW_HEIGHT = 10
 
@@ -18,35 +17,32 @@ class OverlayHUD : LegacyHud("statsoverlay-overlay", "StatsOverlay", Category.IN
     @Transient
     private var compiledGrid: CompiledGrid? = null
 
-    init {
-        padLeft = 5f
-        padRight = 5f
-        padTop = 5f
-        padBottom = 5f
-        bgRadius = 8f
-    }
+    private val borderThickness get() = if (ModConfig.overlayBackground && ModConfig.overlayBorder)
+        ModConfig.overlayBorderThickness.coerceIn(1, 10) else 0
+    private val paddingX get() = ModConfig.overlayPaddingX.coerceIn(0, 50) + borderThickness
+    private val paddingY get() = ModConfig.overlayPaddingY.coerceIn(0, 50) + borderThickness
 
     override fun update(): Boolean {
-        val next = FetchQueue.makeGrid()
+        val next = FetchQueue.makeGrid(preview = HudManager.isEditing)
         if (compiledGrid == next) return false
         compiledGrid = next
         return true
     }
 
-    override val width get() = (compiledGrid?.width?.toFloat() ?: 1f) + padLeft + padRight
-    override val height get() = (compiledGrid?.height?.toFloat() ?: ROW_HEIGHT.toFloat()) + padTop + padBottom
+    override val width get() = (compiledGrid?.width?.toFloat() ?: 1f) + paddingX * 2
+    override val height get() = (compiledGrid?.height?.toFloat() ?: ROW_HEIGHT.toFloat()) + paddingY * 2
     override fun showByDefault() = true
     override fun updateFrequency() = 50_000_000L
     override fun multipleInstancesAllowed() = false
-    override fun shouldShow() = EventListener.shouldShow()
+    override fun shouldShow() = ModConfig.overlayEnabled && EventListener.shouldShow()
 
     // OneConfig applies position and scale before calling render.
     override fun render() {
         val grid = compiledGrid ?: return
-        if (showBackground) drawBackground()
-        var yNow = padTop.toInt()
+        if (ModConfig.overlayBackground) drawBackground()
+        var yNow = paddingY
         for (row in grid.grid) {
-            var xNow = padLeft.toInt()
+            var xNow = paddingX
             for ((index, text) in row.withIndex()) {
                 val width = grid.widthMap[index]
                 drawText(text, xNow, yNow, width)
@@ -57,15 +53,13 @@ class OverlayHUD : LegacyHud("statsoverlay-overlay", "StatsOverlay", Category.IN
     }
 
     private fun drawBackground() {
-        val w = ceil(width).toInt()
-        val h = ceil(height).toInt()
-        val radius = bgRadius.coerceIn(0f, minOf(w, h) / 2f).toInt()
-        GuiElement.fill(0, radius, w, h - radius, bgColor)
-        for (row in 0 until radius) {
-            val dy = radius - row - 0.5f
-            val inset = ceil(radius - sqrt(radius * radius - dy * dy)).toInt()
-            GuiElement.fill(inset, row, w - inset, row + 1, bgColor)
-            GuiElement.fill(inset, h - row - 1, w - inset, h - row, bgColor)
+        val border = borderThickness
+        val radius = if (ModConfig.overlayRounded) ModConfig.overlayCornerRadius.coerceIn(0, 32) else 0
+        val backgroundColor = ModConfig.overlayBackgroundColor.argb
+        val borderColor = ModConfig.overlayBorderColor.argb
+        // Separate fill and border spans keep translucent colors from layering over each other.
+        HudBackground.draw(width.toInt(), height.toInt(), radius, border) { left, top, right, bottom, outline ->
+            GuiElement.fill(left, top, right, bottom, if (outline) borderColor else backgroundColor)
         }
     }
 
