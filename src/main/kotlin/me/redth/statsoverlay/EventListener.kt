@@ -5,7 +5,6 @@ import me.redth.statsoverlay.config.ModConfig
 import me.redth.statsoverlay.data.FetchQueue
 import me.redth.statsoverlay.util.mc
 import net.hypixel.data.type.GameType
-import org.polyfrost.oneconfig.api.event.v1.events.ChatEvent
 import org.polyfrost.oneconfig.api.event.v1.events.HypixelLocationEvent
 import org.polyfrost.oneconfig.api.event.v1.events.TickEvent
 import org.polyfrost.oneconfig.api.event.v1.events.WorldEvent
@@ -88,10 +87,10 @@ object EventListener {
     private val chatRegex = Regex("^(?:\\[[^\\]]+\\] )*([A-Za-z0-9_]{1,16}): ")
 
     // In the pre-game lobby, Hypixel hides tab names, but chat still shows the real name.
-    @Subscribe
-    fun onChat(event: ChatEvent.Receive) {
+    // Called by ClientPlayNetworkHandlerMixin with server chat only (colors stripped), so
+    // lines other mods print locally, like Additional's "FKDR: 3.2", aren't read as players.
+    fun onServerChat(message: String) {
         if (!wasInBedwars || gameStarted) return
-        val message = event.fullyUnformattedMessage
         if (message.trim() == GAME_START_MESSAGE) {
             gameStarted = true
             pruneCountdown = 40 // ~2s for the tab list to update

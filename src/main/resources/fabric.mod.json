@@ -12,6 +12,7 @@
       "value": "me.redth.statsoverlay.StatsOverlay"
     }]
   },
+  "mixins": ["statsoverlay.mixins.json"],
   "depends": {
     "fabricloader": ">=0.19.5",
     "minecraft": "1.8.9",
